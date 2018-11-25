@@ -1,0 +1,30 @@
+#coding: utf-8
+from lxml import html 
+from lxml import etree 
+
+def get_page(path):
+    '''
+        http://insideoutproject.xyz/mulheres-palestrantes/
+    '''
+    arquivo = open(path,encoding = 'utf-8').read()
+    pagina = etree.HTML(arquivo)
+    return pagina
+
+def get_card(pagina):
+    '''
+    '''
+    nomes = pagina.xpath('//article[@class="card"]/h3/text()')
+    fotos = pagina.xpath('//article[@class="card"]/img/@src')
+    localizacoes = pagina.xpath('//article[@class="card"]/div/p[@class="location"]/text()')
+    temas = pagina.xpath('//article[@class="card"]/ul/li/text()')
+    return zip(nomes,fotos,localizacoes,temas)
+
+def print_inserts(card):
+    '''
+    '''
+    for nome,foto,localizacao,temas in card:
+        print ("INSERT INTO mpalestrantes VALUES('"+nome+"','"+foto+"','"+localizacao+"','"+temas+"');")
+
+pagina = get_page('mulheres_palestrantes.htm')
+cards = get_card(pagina)
+print_inserts(cards)
